@@ -10,7 +10,7 @@ public class LoginRequest {
     @jakarta.persistence.Id
     public String Id;
     @NotBlank
-    public String UserName;
+    public String Email;
     @NotBlank
     public String Password;
 }
