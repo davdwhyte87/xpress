@@ -55,4 +55,13 @@ public class AuthController {
         LoginResponse loginResponse = new LoginResponse(token, "Login Ok");
         return ResponseHandler.responseBuilder("ok", HttpStatus.OK, loginResponse);
     }
+
+
+    @PostMapping("/buy")
+    public ResponseEntity<Object> BuyAirtime(){
+//        AuthUtils authUtils = new AuthUtils();
+//        String paymentHash = authUtils.CalculatePaymentHash("", "hLBjoVvx3lX9upMde11ld8p7SA7fLB54_CVASPRV");
+//        logger.debug("PAYMENt HASH", paymentHash);
+        return ResponseHandler.responseBuilder("ok", HttpStatus.OK, "loginResponse");
+    }
 }
