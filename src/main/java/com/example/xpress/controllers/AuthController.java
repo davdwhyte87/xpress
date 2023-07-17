@@ -34,7 +34,7 @@ public class AuthController {
 //    }
 
     Logger logger = LoggerFactory.getLogger(UserAuthInterceptor.class);
-    @PostMapping("/hello")
+    @PostMapping("/login")
     public ResponseEntity<Object> LoginUser(@Valid @RequestBody LoginRequest loginRequest){
         // simulate pulling user from database
         User userData = DummyData.GetUser();
