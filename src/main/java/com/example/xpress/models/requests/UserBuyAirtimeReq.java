@@ -9,4 +9,6 @@ public class UserBuyAirtimeReq {
 
     @NotNull
     public Integer Amount;
+    @NotBlank
+    public String Biller;
 }

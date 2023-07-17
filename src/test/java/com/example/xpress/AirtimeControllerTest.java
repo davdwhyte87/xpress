@@ -64,6 +64,7 @@ public class AirtimeControllerTest {
         ObjectMapper objectMapper = new ObjectMapper();
         UserBuyAirtimeReq userBuyAirtimeReq = new UserBuyAirtimeReq();
         userBuyAirtimeReq.Amount = 200;
+        userBuyAirtimeReq.Biller = "MTN";
         String content =objectMapper.writeValueAsString(userBuyAirtimeReq);
 
         // prepare mock request
