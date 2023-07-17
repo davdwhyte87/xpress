@@ -11,7 +11,12 @@ API that:
 
 Technical Details
 
-- I addedd logging config
+- I added logging config
+- In memory database (Storing user data as static object accessible
+throughout the application)
+- I added Unit testing 
+- I added a test suite
+- Ensured separation of concern 
 
 Controllers
 - AuthController handles login for users, it gives the user a token if the credentials given are correct 
