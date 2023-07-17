@@ -6,6 +6,8 @@ import org.springframework.http.ResponseEntity;
 import java.util.HashMap;
 import java.util.Map;
 
+
+// we need to format all responses to have similar structure
 public class ResponseHandler {
     public static ResponseEntity<Object> responseBuilder(
             String message, HttpStatus httpStatus, Object responseObject

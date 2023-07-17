@@ -9,7 +9,7 @@ API that:
 - Users can buy airtime by specifying the amount they want to buy
 
 
-Technical Details
+**Technical Details**
 
 - I added logging config
 - In memory database (Storing user data as static object accessible
@@ -18,7 +18,7 @@ throughout the application)
 - I added a test suite
 - Ensured separation of concern 
 
-Controllers
+**Controllers**
 - AuthController handles login for users, it gives the user a token if the credentials given are correct 
 - Airtime controller manages the purchase of airtime
 Utils
@@ -32,4 +32,18 @@ we store tha user data here. This way, we can share this data between all parts 
 this filter is configured in the App config XpressApplication.java
 - Validation handler formats error messages that come up from Class validation exceptions 
 
+
+**Routes** 
+
+- Log user in http://localhost:8080/auth/login
+`  {
+  "Email":"jenny@gmail.com",
+  "Password":"YEUH839jDHJUND"
+  }`
+- Buy Airtime http://localhost:8080/airtime/buy
+`  {
+  "Amount":200,
+  "Biller":"GLO"
+  }`
+Header: (Authorization)
 

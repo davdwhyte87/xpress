@@ -43,6 +43,7 @@ public class AirtimeController {
 
     @PostMapping("/buy")
     public ResponseEntity<Object> BuyAirtime(@Valid @RequestBody UserBuyAirtimeReq userBuyAirtimeReq) {
+        // get airtime unique code from xpress API
         AirtimeHelper airtimeHelper = new AirtimeHelper();
         String uniqueCode = airtimeHelper.GetUniqueAirtimeCode(userBuyAirtimeReq.Biller).toString();
         logger.debug(uniqueCode);
@@ -81,6 +82,10 @@ public class AirtimeController {
                     .POST(HttpRequest.BodyPublishers.ofString(data))
                     .build();
             var response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            if (response.statusCode() != 200){
+                ResponseHandler.responseBuilder("error", HttpStatus.INTERNAL_SERVER_ERROR, "Error making purchase at Xpress");
+
+            }
             logger.debug(response.body());
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
