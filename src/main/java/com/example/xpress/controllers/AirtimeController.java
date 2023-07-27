@@ -15,6 +15,8 @@ import net.minidev.json.JSONArray;
 import org.slf4j.Logger;
 
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,59 +41,18 @@ import java.util.concurrent.atomic.AtomicReference;
 @RequestMapping("/airtime")
 public class AirtimeController {
 
+    @Autowired
+    ApplicationContext context;
     Logger logger = LoggerFactory.getLogger(AirtimeController.class);
 
     @PostMapping("/buy")
     public ResponseEntity<Object> BuyAirtime(@Valid @RequestBody UserBuyAirtimeReq userBuyAirtimeReq) {
         // get airtime unique code from xpress API
-        AirtimeHelper airtimeHelper = new AirtimeHelper();
+        AirtimeHelper airtimeHelper = context.getBean(AirtimeHelper.class);
         String uniqueCode = airtimeHelper.GetUniqueAirtimeCode(userBuyAirtimeReq.Biller).toString();
         logger.debug(uniqueCode);
-        // prepare payment Req for xpress
-        BuyAirtimeReq buyAirtimeReq = new BuyAirtimeReq();
-        String generateReqId = String.format("%010d", new BigInteger(UUID.randomUUID().toString().replace("-", ""), 16));
-        buyAirtimeReq.requestId = generateReqId.substring(generateReqId.length() - 5);
-        String generateUUIDNo = String.format("%010d", new BigInteger(UUID.randomUUID().toString().replace("-", ""), 16));
-        buyAirtimeReq.uniqueCode = uniqueCode;
-        Details details = new Details();
-        details.amount = userBuyAirtimeReq.Amount;
-        details.phoneNumber = "09132058051";
-        buyAirtimeReq.details = details;
-
-        // get payment hash
-        AuthUtils authUtils = new AuthUtils();
-        String paymentHash = authUtils.CalculatePaymentHash(buyAirtimeReq, "hLBjoVvx3lX9upMde11ld8p7SA7fLB54_CVASPRV");
-        logger.debug(paymentHash);
-
-        // send data to express server
-        try {
-            var uri = URI.create("https://billerstest.xpresspayments.com:9603/api/v1/airtime/fulfil");
-            var client = HttpClient.newHttpClient();
-            ObjectMapper mapper = new ObjectMapper();
-            String data = mapper.writeValueAsString(buyAirtimeReq);
-            var request = HttpRequest
-                    .newBuilder()
-                    .uri(uri)
-                    .version(HttpClient.Version.HTTP_2)
-                    .timeout(Duration.ofMinutes(3))
-                    .header("Content-Type", "application/json")
-                    .header("Authorization", "Bearer jD3FFF9MiN7MoyyWsIf6WXQsn44nPvji_CVASPUB")
-                    .header("Authentication", "Bearer jD3FFF9MiN7MoyyWsIf6WXQsn44nPvji_CVASPUB")
-                    .header("PaymentHash", paymentHash)
-                    .header("Channel", "API")
-                    .POST(HttpRequest.BodyPublishers.ofString(data))
-                    .build();
-            var response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            if (response.statusCode() != 200){
-                ResponseHandler.responseBuilder("error", HttpStatus.INTERNAL_SERVER_ERROR, "Error making purchase at Xpress");
-
-            }
-            logger.debug(response.body());
-        } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
-        }
-
+        // submit purchase request to xpress pay
+        airtimeHelper.submitBuyRequestAtXpress(userBuyAirtimeReq, uniqueCode);
         return ResponseHandler.responseBuilder("ok", HttpStatus.OK, LoggedUserContext.getCurrentLoggedUser());
     }
-
 }

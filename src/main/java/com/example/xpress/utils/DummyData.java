@@ -2,6 +2,7 @@ package com.example.xpress.utils;
 
 import com.example.xpress.models.User;
 
+
 public final class DummyData {
     public static User user = new User("jndndj","Jenny Ide","jenny@gmail.com","YEUH839jDHJUND");
 
